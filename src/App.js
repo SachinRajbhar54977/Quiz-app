@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Question from './components/Questions';
+import Score from './components/Score';
 
-function App() {
+const App = () => {
+  const questions = [
+    {
+      question: 'What is the capital of France?',
+      answers: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+      correctAnswer: 'Paris',
+    },
+    {
+      question: 'Who wrote "Hamlet"?',
+      answers: ['Charles Dickens', 'William Shakespeare', 'J.K. Rowling', 'Ernest Hemingway'],
+      correctAnswer: 'William Shakespeare',
+    },
+    // Add more questions here
+  ];
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [quizComplete, setQuizComplete] = useState(false);
+
+  const handleAnswer = (isCorrect) => {
+    if (isCorrect) {
+      setScore(score + 1);
+    }
+
+    const nextQuestionIndex = currentQuestionIndex + 1;
+    if (nextQuestionIndex < questions.length) {
+      setCurrentQuestionIndex(nextQuestionIndex);
+    } else {
+      setQuizComplete(true);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      {!quizComplete ? (
+        <Question
+          questionData={questions[currentQuestionIndex]}
+          onAnswer={handleAnswer}
+        />
+      ) : (
+        <Score score={score} totalQuestions={questions.length} />
+      )}
     </div>
   );
-}
+};
 
 export default App;
